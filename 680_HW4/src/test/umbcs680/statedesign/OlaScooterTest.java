@@ -76,7 +76,7 @@ class OlaScooterTest {
     }
 
     @Test
-    void testParkedStateNoTransitionOnSideStandParked() {
+    void ParkedStateNoTransitionOnSideStandParked() {
         OlaScooter scooter = new OlaScooter(ParkedState.getInstance());
         scooter.sideStandParked();
         assertTrue(scooter.getState() instanceof ParkedState, "Scooter in Parked State should not transition on side stand parked.");
