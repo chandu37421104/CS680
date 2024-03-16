@@ -6,8 +6,8 @@ import java.util.LinkedList;
 public class SingletonPrimeGenerator {
 
     private static SingletonPrimeGenerator instance = null;
-    protected long from, to;
-    protected LinkedList<Long> primes = new LinkedList<Long>();
+    private long from, to;
+    private LinkedList<Long> primes = new LinkedList<Long>();
 
     private SingletonPrimeGenerator() {}
 
