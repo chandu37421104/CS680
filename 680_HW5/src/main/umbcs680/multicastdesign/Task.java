@@ -2,7 +2,7 @@ package umbcs680.multicastdesign;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class Task implements Observable {
     private String taskDetail;
@@ -65,5 +65,23 @@ public class Task implements Observable {
             this.isCompleted = true;
             notifyObservers("Task '" + taskDetail + "' marked as completed.");
         }
+    }
+
+    public boolean checkObserverNames(Task task, List<String> expectedNames) {
+        List<String> actualObserverNames = task.getObservers().stream()
+            .map(observer -> {
+                if (observer instanceof ProjectManager) {
+                    return ((ProjectManager) observer).getName();
+                } else if (observer instanceof TeamManager) {
+                    return ((TeamManager) observer).getName();
+                } else if (observer instanceof TeamMember) {
+                    return ((TeamMember) observer).getName();
+                } else {
+                    return ""; 
+                }
+            })
+            .collect(Collectors.toList());
+
+        return actualObserverNames.containsAll(expectedNames) && expectedNames.containsAll(actualObserverNames);
     }
 }

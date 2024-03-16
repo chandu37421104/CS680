@@ -126,69 +126,50 @@ public void countObserversForEnablingAllCappFeaturesToCappBikeTask() {
 @Test
     public void checkObserversForAddingLockAndUnlockToAppTask() {
         Task task = project1.getTasks().get(0);
-        assertTrue(checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Sahithi",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Sahithi",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Adding lock and unlock to app' task.");
     }
 
     @Test
     public void checkObserversForProximityLockUnlockTask() {
         Task task = project1.getTasks().get(1);
-        assertTrue(checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Chandu",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Chandu",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Proximity lock/unlock' task.");
     }
 
     @Test
     public void checkObserversForAddingMultipleProfilesTask() {
         Task task = project1.getTasks().get(2);
-        assertTrue(checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Bhargav",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Bhargav",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Adding multiple profiles' task.");
     }
 
     @Test
     public void checkObserversForPasscodeApiTask() {
         Task task = project1.getTasks().get(3);
-        assertTrue(checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Siva Kumar", "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Shashi Kiran", "Shankar", "Siva Kumar", "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Passcode API' task.");
     }
 
     @Test
     public void checkObserversForLimitingSpeedBasedModeTask() {
         Task task = project2.getTasks().get(0);
-        assertTrue(checkObserverNames(task, List.of("Kabir", "Shankar", "Santoosh",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Kabir", "Shankar", "Santoosh",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Limiting speed based mode' task.");
     }
 
     @Test
     public void checkObserversForPartyModeImplementationTask() {
         Task task = project2.getTasks().get(1);
-        assertTrue(checkObserverNames(task, List.of("Kabir", "Shankar", "Pavan",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Kabir", "Shankar", "Pavan",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Party mode implementation' task.");
     }
 
     @Test
     public void checkObserversForEnablingAllCappFeaturesToCappBikeTask() {
         Task task = project2.getTasks().get(2);
-        assertTrue(checkObserverNames(task, List.of("Kabir", "Shankar", "Bharthi",  "Honnesh", "Aswini", "Raj")),
+        assertTrue(task.checkObserverNames(task, List.of("Kabir", "Shankar", "Bharthi",  "Honnesh", "Aswini", "Raj")),
             "Observer names do not match expected values for 'Enabling all Capp features to Capp-Bike' task.");
     }
-
-    private boolean checkObserverNames(Task task, List<String> expectedNames) {
-        List<String> actualObserverNames = task.getObservers().stream()
-            .map(observer -> {
-                if (observer instanceof ProjectManager) {
-                    return ((ProjectManager) observer).getName();
-                } else if (observer instanceof TeamManager) {
-                    return ((TeamManager) observer).getName();
-                } else if (observer instanceof TeamMember) {
-                    return ((TeamMember) observer).getName();
-                } else {
-                    return ""; 
-                }
-            })
-            .collect(Collectors.toList());
-
-        return actualObserverNames.containsAll(expectedNames) && expectedNames.containsAll(actualObserverNames);
-    }
-    
-    
+   
 }

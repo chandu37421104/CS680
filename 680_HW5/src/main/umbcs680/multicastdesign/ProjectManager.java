@@ -5,10 +5,11 @@ import java.util.List;
 
 public class ProjectManager implements Observer, Commenter {
     private String name;
-
+    private List<String> notifications;
 
     public ProjectManager(String name) {
         this.name = name;
+        this.notifications = new ArrayList<>();
     }
     public String getName() {
         return this.name;
@@ -22,6 +23,9 @@ public class ProjectManager implements Observer, Commenter {
     @Override
     public void comment(Task task, String commentText) {
         task.addComment(name, commentText);
+    }
+    public List<String> getNotifications() {
+        return new ArrayList<>(notifications);
     }
    
 }

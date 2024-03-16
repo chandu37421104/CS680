@@ -11,6 +11,7 @@ public class TeamMember implements Observer, Commenter {
     public TeamMember(String name) {
         this.name = name;
         this.notifications = new ArrayList<>();
+
     }
     public String getName() {
         return this.name;
@@ -33,4 +34,8 @@ public class TeamMember implements Observer, Commenter {
             System.out.println("\t- " + notification);
         }
     }
+    public List<String> getNotifications() {
+        return new ArrayList<>(notifications); 
+    }
 }
+
