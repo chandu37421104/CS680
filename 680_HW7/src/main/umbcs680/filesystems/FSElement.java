@@ -40,6 +40,11 @@ public abstract class FSElement {
         return parent;
     }
 
+    public void setParent(Directory parent) {
+        this.parent = parent;
+    }
+
+
     public boolean isDirectory() {
         return this instanceof Directory;
     }

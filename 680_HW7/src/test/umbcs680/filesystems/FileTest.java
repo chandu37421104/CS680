@@ -17,19 +17,19 @@ public class FileTest {
     }
 
     @Test
-    void testGetSize() {
+    void GetFileSizeTest() {
         assertEquals(200, aJava.getSize(), "The size of A.java should be 200.");
     }
 
     @Test
-    void testDelete() {
+    void DeleteFileTest() {
         aJava.delete();
         assertFalse(main.getChildren().contains(aJava), "Main directory should not contain A.java after it is deleted.");
         assertEquals(0, main.getSize(), "Size of the main directory should be 0 after deleting A.java.");
     }
 
     @Test
-    void testMoveFile() {
+    void MoveFileFromMainToTestDirectory() {
         Directory test = new Directory(null, "test", LocalDateTime.now(), "rwx");
         main.moveElement(aJava, test);
         assertTrue(test.getChildren().contains(aJava), "Test directory should contain A.java after moving.");
