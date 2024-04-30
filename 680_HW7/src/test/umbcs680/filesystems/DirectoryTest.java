@@ -22,7 +22,7 @@ public class DirectoryTest {
     }
 
     @Test
-    void testAddChild() {
+    void AddingChildToDirectoryTest() {
         assertEquals(2, main.getChildren().size(), "Main directory should contain two files initially.");
         File newFile = new File(main, "C.java", 100, LocalDateTime.now(), "rw-");
         main.addChild(newFile);
@@ -30,14 +30,14 @@ public class DirectoryTest {
     }
 
     @Test
-    void testRemoveChild() {
+    void RemovingChildFromDirectoryTest() {
         main.removeChild(aJava);
         assertEquals(1, main.getChildren().size(), "Main directory should have one file after removal.");
         assertFalse(main.getChildren().contains(aJava), "Main directory should not contain A.java after it is removed.");
     }
 
     @Test
-    void testGetSize() {
+    void GetFileSizeTest() {
         int expectedSize = aJava.getSize() + bJava.getSize();
         assertEquals(expectedSize, main.getSize(), "Size of the main directory should be the sum of its files' sizes.");
     }
