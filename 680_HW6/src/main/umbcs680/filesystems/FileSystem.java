@@ -1,31 +1,69 @@
 package umbcs680.filesystems;
+
 import java.util.LinkedList;
-import java.util.HashMap;
+import java.util.List;
 
 public class FileSystem {
-    private static volatile FileSystem instance;
-    private HashMap<String, Directory> drives;
+    private static FileSystem instance = null;
+    private List<Directory> rootDirs;
 
     private FileSystem() {
-        drives = new HashMap<>();
+        this.rootDirs = new LinkedList<>();
     }
 
     public static FileSystem getFileSystem() {
         if (instance == null) {
-            synchronized (FileSystem.class) {
-                if (instance == null) {
-                    instance = new FileSystem();
-                }
-            }
+            instance = new FileSystem();
         }
         return instance;
     }
 
-    public void addDrive(String driveLetter, Directory root) {
-        drives.put(driveLetter.toUpperCase(), root);
+    public List<Directory> getRootDirs() {
+        return rootDirs;
     }
 
-    public Directory getDrive(String driveLetter) {
-        return drives.get(driveLetter.toUpperCase());
+    public void appendRootDir(Directory root) {
+        rootDirs.add(root);
+    }
+
+    public Directory findDirectoryByName(String name) {
+        for (Directory dir : rootDirs) {
+            if (dir.getName().equals(name)) {
+                return dir;
+            }
+        }
+        return null;
+    }
+
+    public File findFileByPath(String path) {
+        String[] parts = path.split("/");
+        Directory currentDir = findDirectoryByName(parts[0]);
+
+        if (currentDir == null) {
+            return null;
+        }
+
+        for (int i = 1; i < parts.length - 1; i++) {
+            boolean found = false;
+            for (Directory subDir : currentDir.getSubDirectories()) {
+                if (subDir.getName().equals(parts[i])) {
+                    currentDir = subDir;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                return null;
+            }
+        }
+
+        for (File file : currentDir.getFiles()) {
+            if (file.getName().equals(parts[parts.length - 1])) {
+                return file;
+            }
+        }
+
+        return null;
     }
 }

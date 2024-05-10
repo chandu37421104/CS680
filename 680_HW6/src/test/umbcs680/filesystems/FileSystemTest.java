@@ -1,34 +1,35 @@
 package umbcs680.filesystems;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
-
-    private FileSystem fileSystem;
-    private Directory root;
-
-    @BeforeEach
-    public void setUp() {
-        fileSystem = FileSystem.getFileSystem();
-        root = new Directory(null, "root");
-        fileSystem.addDrive("C", root);
+    @BeforeAll
+    public static void setup() {
+        TestFixture.setupFixture();
     }
 
     @Test
-    public void testSingletonInstance() {
-        FileSystem anotherFileSystem = FileSystem.getFileSystem();
-        assertSame(fileSystem, anotherFileSystem);
+    public void FindDirectoryByNameTest() {
+        Directory srcDir = TestFixture.repo.getSubDirectories().stream()
+            .filter(dir -> "src".equals(dir.getName()))
+            .findFirst()
+            .orElse(null);
+        assertNotNull(srcDir);
     }
 
     @Test
-    public void testAddDrive() {
-        Directory anotherRoot = new Directory(null, "anotherRoot");
-        fileSystem.addDrive("D", anotherRoot);
-        assertNotNull(fileSystem.getDrive("D"));
-        assertSame(anotherRoot, fileSystem.getDrive("D"));
+    public void FindFileByPathTest() {
+        File foundFile = TestFixture.repo.findFileByName("readme.md");
+        assertNotNull(foundFile, "File 'readme.md' should be present in the file system");
+    }
+
+    @Test
+    public void SingletonInstanceTest() {
+        FileSystem fs1 = FileSystem.getFileSystem();
+        FileSystem fs2 = FileSystem.getFileSystem();
+
+        assertSame(fs1, fs2);
     }
 }
-

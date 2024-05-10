@@ -8,43 +8,46 @@ public abstract class FSElement {
     protected LocalDateTime creationTime;
     protected Directory parent;
 
-    
-    public FSElement(Directory parent, String name, int size) {
+    public FSElement(Directory parent, String name, int size, LocalDateTime creationTime) {
         this.parent = parent;
         this.name = name;
         this.size = size;
-        this.creationTime = LocalDateTime.now();
-    }
-
-    
-    public abstract boolean isDirectory();
-
-    public String getName() {
-        return name;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public LocalDateTime getCreationTime() {
-        return creationTime;
+        this.creationTime = creationTime;
     }
 
     public Directory getParent() {
         return parent;
     }
 
+    public void setParent(Directory parent) {
+        this.parent = parent;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public void setSize(int size) {
         this.size = size;
     }
 
-  
-    public void setParent(Directory parent) {
-        this.parent = parent;
+    public LocalDateTime getCreationTime() {
+        return creationTime;
     }
+
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public abstract boolean isDirectory();
+
+    public abstract String getPath();
 }

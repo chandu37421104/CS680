@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class File extends FSElement {
 
-    public File(Directory parent, String name, int size) {
-        super(parent, name, size);
+    public File(Directory parent, String name, int size, LocalDateTime creationTime) {
+        super(parent, name, size, creationTime);
     }
 
     @Override
@@ -14,17 +14,15 @@ public class File extends FSElement {
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
-       
-    }
+    public String getPath() {
+        StringBuilder path = new StringBuilder(name);
+        Directory currentParent = parent;
 
-    @Override
-    public void setSize(int size) {
-        this.size = size;
-        if (parent != null) {
-            parent.recalculateSize();
+        while (currentParent != null) {
+            path.insert(0, currentParent.getName() + "/");
+            currentParent = currentParent.getParent();
         }
+
+        return path.toString();
     }
 }
-

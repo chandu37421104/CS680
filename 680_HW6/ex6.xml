@@ -47,6 +47,9 @@
 				<fileset dir="${bin.test}">
 					<include name="umbcs680/filesystems/*Test.class" />
 				</fileset>
+				<fileset dir="${bin.test}">
+					<include name="umbcs680/filesystems/TestFixture.class" />
+				</fileset>
 	        </testclasses>
 			<listener type="legacy-plain" sendSysOut="true" />
 			<listener type="legacy-xml" sendSysOut="true" sendSysErr="true" />

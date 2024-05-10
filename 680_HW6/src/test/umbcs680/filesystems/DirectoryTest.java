@@ -1,88 +1,81 @@
 package umbcs680.filesystems;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDateTime;
-import java.util.LinkedList;
-
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 public class DirectoryTest {
-
-    private Directory root;
-    private File fileA, fileB, readme;
-    private Directory src, main, test;
-
-    @BeforeEach
-    public void setUp() {
-        root = new Directory(null, "repo");
-        src = new Directory(root, "src");
-        main = new Directory(src, "main");
-        test = new Directory(src, "test");
-        
-        fileA = new File(main, "A.java", 100);
-        fileB = new File(main, "B.java", 150);
-        File aTest = new File(test, "ATest.java", 50);
-        File bTest = new File(test, "BTest.java", 60);
-        readme = new File(root, "readme.md", 30);
-        
-        main.appendChild(fileA);
-        main.appendChild(fileB);
-        test.appendChild(aTest);
-        test.appendChild(bTest);
-        src.appendChild(main);
-        src.appendChild(test);
-        root.appendChild(src);
-        root.appendChild(readme);
+    @BeforeAll
+    public static void setup() {
+        TestFixture.setupFixture();
     }
 
     @Test
-    public void AppendChild() {
-        Directory newDir = new Directory(root, "newDir");
-        root.appendChild(newDir);
-        assertTrue(root.getSubDirectories().contains(newDir));
+    public void SrcCountChildrenTest() {
+        assertEquals(2, TestFixture.src.countChildren());
     }
 
     @Test
-public void GetSubDirectories() {
-    assertTrue(root.getSubDirectories().contains(src));
-    assertFalse(root.getSubDirectories().stream()
-        .anyMatch(d -> d.getName().equals("readme.md")));
+    public void MainCountChildrenTest() {
+        assertEquals(2, TestFixture.main.countChildren());
+    }
+
+    @Test
+    public void TestCountChildrenTest() {
+        assertEquals(2, TestFixture.test.countChildren());
+    }
+
+    @Test
+    public void RepoTotalSizeTest() {
+        assertEquals(420, TestFixture.repo.getTotalSize());
+    }
+
+    @Test
+    public void MainTotalSizeTest() {
+        assertEquals(200, TestFixture.main.getTotalSize());
+    }
+
+    @Test
+    public void TestTotalSizeTest() {
+        assertEquals(200, TestFixture.test.getTotalSize());
+    }
+
+    @Test
+    public void GetSrcSubDirectoriesTest() {
+        assertEquals(2, TestFixture.src.getSubDirectories().size());
+    }
+
+    @Test
+    public void GetMainSubDirectoriesTest() {
+        assertEquals(0, TestFixture.main.getSubDirectories().size());
+    }
+
+    @Test
+    public void GetRepoFilesTest() {
+        assertEquals(1, TestFixture.repo.getFiles().size());
+    }
+
+    @Test
+    public void GetMainFilesTest() {
+        assertEquals(2, TestFixture.main.getFiles().size());
+    }
+
+    @Test
+    public void GetTestFilesTest() {
+        assertEquals(2, TestFixture.test.getFiles().size());
+    }
+
+    @Test
+    public void MainContainsaJavaFileTest() {
+        assertTrue(TestFixture.main.contains(TestFixture.aJava));
+    }
+
+    @Test
+    public void TestContainsaTestJavaFileTest() {
+        assertTrue(TestFixture.test.contains(TestFixture.aTestJava));
+    }
+
+    @Test
+    public void RepoContainsaJavaFileTest() {
+        assertFalse(TestFixture.repo.contains(TestFixture.aJava));
+    }
 }
-
-@Test
-public void GetFiles() {
-    assertTrue(root.getFiles().contains(readme));
-    assertFalse(root.getFiles().stream()
-        .anyMatch(f -> f.getName().equals("src")));
-}
-
-@Test
-public void GetTotalSize() {
-    assertEquals(390, root.getTotalSize());
-}
-
-@Test
-public void directoriesWithDifferentNamesOrContents_ShouldNotBeEqual() {
-    Directory diffDir = new Directory(root, "diffSrc");
-    assertNotEquals(src, diffDir);
-}
-
-@Test
-public void changingDirectoryName_ShouldReflectChange() {
-    String newName = "newSrc";
-    src.setName(newName);
-    assertEquals(newName, src.getName());
-}
-
-
-
-@Test
-public void addingFileToSubDirectory_ShouldReflectInRootSize() {
-    File newFile = new File(test, "C.java", 20);
-    test.appendChild(newFile);
-    assertEquals(410, root.getTotalSize());
-}
-}
-
