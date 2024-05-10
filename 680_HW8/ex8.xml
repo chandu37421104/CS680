@@ -38,6 +38,9 @@
 			<classpath refid="classpath"/>
 			<include name="umbcs680/hw08/*.java"/>
 			<include name="**/*.java"/>
+            <classpath refid="classpath"/>
+			<include name="umbcs680/hw08/TestFixture.java"/>
+			<include name="**/*.java"/>
 		</javac>
 	</target>
 

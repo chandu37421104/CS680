@@ -2,58 +2,56 @@ package umbcs680.hw08.fs;
 
 import java.time.LocalDateTime;
 
+import umbcs680.hw08.util.FSVisitor;
+
 public abstract class FSElement {
-    protected Directory parent;
     protected String name;
     protected int size;
     protected LocalDateTime creationTime;
-    protected String permissions;
+    protected Directory parent;
 
-    public FSElement(Directory parent, String name, int size, LocalDateTime creationTime, String permissions) {
+    public FSElement(Directory parent, String name, int size, LocalDateTime creationTime) {
         this.parent = parent;
         this.name = name;
         this.size = size;
         this.creationTime = creationTime;
-        this.permissions = permissions;
-        if (parent != null) {
-            parent.addChild(this);
-        }
     }
 
-    public abstract int getSize();
+    public abstract void accept(FSVisitor visitor);
 
-    public void delete() {
-        if (parent != null) {
-            parent.removeChild(this);
-        }
+    public Directory getParent() {
+        return parent;
+    }
+
+    public void setParent(Directory parent) {
+        this.parent = parent;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public Directory getParent() {
-        return parent;
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
     }
 
-    public boolean isDirectory() {
-        return this instanceof Directory;
-    }
+    public abstract boolean isDirectory();
 
-    public String getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
-    }
-
-    public abstract void accept(umbcs680.hw08.util.FSVisitor visitor);
-
-    
+    public abstract String getPath();
 }
-
