@@ -1,55 +1,118 @@
 package umbcs680.filesystems;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Directory extends FSElement {
-    private List<FSElement> children;  // This holds the elements in the directory
+    private List<FSElement> children;
 
-    public Directory(Directory parent, String name, LocalDateTime creationTime, String permissions) {
-        super(parent, name, 0, creationTime, permissions);
-        children = new ArrayList<>();  // Initialize the list of children
+    public Directory(Directory parent, String name, LocalDateTime creationTime) {
+        super(parent, name, 0, creationTime);
+        this.children = new LinkedList<>();
     }
 
-    public void addChild(FSElement child) {
-        children.add(child);  // Add a child element to the directory
+    public void appendChild(FSElement child) {
+        child.setParent(this);
+        children.add(child);
     }
 
-    public void removeChild(FSElement child) {
-        children.remove(child);  // Remove a child element from the directory
+    public List<FSElement> getChildren() {
+        return children;
     }
 
-    public File createFile(String name, int size, LocalDateTime creationTime, String permissions) {
-        File file = new File(this, name, size, creationTime, permissions);
-        this.addChild(file);  // Add the newly created file to children
-        return file;
+    public List<Directory> getSubDirectories() {
+        List<Directory> subDirs = new LinkedList<>();
+        for (FSElement elem : children) {
+            if (elem instanceof Directory) {
+                subDirs.add((Directory) elem);
+            }
+        }
+        return subDirs;
     }
 
-    public Directory createDirectory(String name, LocalDateTime creationTime, String permissions) {
-        Directory dir = new Directory(this, name, creationTime, permissions);
-        this.addChild(dir);  // Add the newly created directory to children
-        return dir;
+    public List<File> getFiles() {
+        List<File> files = new LinkedList<>();
+        for (FSElement elem : children) {
+            if (elem instanceof File) {
+                files.add((File) elem);
+            }
+        }
+        return files;
     }
 
-    public void moveElement(FSElement element, Directory newParent) {
-        this.removeChild(element);  // Remove element from current directory
-        newParent.addChild(element);  // Add element to the new directory
-        element.setParent(newParent);  // Set the new parent for the element
+    public int countChildren() {
+        return children.size();
     }
 
-    @Override
-    public int getSize() {
+    public int countFiles() {
+        return getFiles().size();
+    }
+
+    public int countSubDirectories() {
+        return getSubDirectories().size();
+    }
+
+    public int getTotalSize() {
         int totalSize = 0;
-        for (FSElement element : children) {  // Iterate over children to calculate total size
-            if (!(element instanceof Link)) {  // Only count size if the element is not a Link
-                totalSize += element.getSize();
+        for (FSElement elem : children) {
+            totalSize += elem.getSize();
+            if (elem instanceof Directory) {
+                totalSize += ((Directory) elem).getTotalSize();
             }
         }
         return totalSize;
     }
 
-    public List<FSElement> getChildren() {
-        return new ArrayList<>(children);  // Return a copy of the children list
+    @Override
+    public boolean isDirectory() {
+        return true;
     }
+
+    @Override
+    public String getPath() {
+        StringBuilder path = new StringBuilder(name);
+        Directory currentParent = parent;
+
+        while (currentParent != null) {
+            path.insert(0, currentParent.getName() + "/");
+            currentParent = currentParent.getParent();
+        }
+
+        return path.toString();
+    }
+
+    public boolean contains(FSElement child) {
+        return children.contains(child);
+    }
+
+    public File findFileByName(String name) {
+        for (FSElement element : children) {
+            if (element instanceof File && name.equals(element.getName())) {
+                return (File) element;
+            }
+            if (element instanceof Directory) {
+                File foundFile = ((Directory) element).findFileByName(name);
+                if (foundFile != null) {
+                    return foundFile;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<Link> getLinks() {
+        List<Link> links = new LinkedList<>();
+        for (FSElement elem : children) {
+            if (elem instanceof Link) {
+                links.add((Link) elem);
+            }
+        }
+        return links;
+    }
+    
+    public int countLinks() {
+        return getLinks().size();
+    }
+    
 }

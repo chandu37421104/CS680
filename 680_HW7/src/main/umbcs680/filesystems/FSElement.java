@@ -3,37 +3,16 @@ package umbcs680.filesystems;
 import java.time.LocalDateTime;
 
 public abstract class FSElement {
-    protected Directory parent;
     protected String name;
     protected int size;
     protected LocalDateTime creationTime;
-    protected String permissions;
+    protected Directory parent;
 
-    public FSElement(Directory parent, String name, int size, LocalDateTime creationTime, String permissions) {
+    public FSElement(Directory parent, String name, int size, LocalDateTime creationTime) {
         this.parent = parent;
         this.name = name;
         this.size = size;
         this.creationTime = creationTime;
-        this.permissions = permissions;
-        if (parent != null) {
-            parent.addChild(this);
-        }
-    }
-
-    public abstract int getSize();
-
-    public void delete() {
-        if (parent != null) {
-            parent.removeChild(this);
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDateTime getCreationTime() {
-        return creationTime;
     }
 
     public Directory getParent() {
@@ -44,16 +23,31 @@ public abstract class FSElement {
         this.parent = parent;
     }
 
-
-    public boolean isDirectory() {
-        return this instanceof Directory;
+    public String getName() {
+        return name;
     }
 
-    public String getPermissions() {
-        return permissions;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    public int getSize() {
+        return size;
     }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public abstract boolean isDirectory();
+
+    public abstract String getPath();
 }

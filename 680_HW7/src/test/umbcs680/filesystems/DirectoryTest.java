@@ -1,44 +1,81 @@
 package umbcs680.filesystems;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDateTime;
-
 public class DirectoryTest {
-    private Directory root;
-    private Directory src;
-    private Directory main;
-    private File aJava;
-    private File bJava;
-
-    @BeforeEach
-    void setup() {
-        root = new Directory(null, "repo", LocalDateTime.now(), "rwx");
-        src = new Directory(root, "src", LocalDateTime.now(), "rwx");
-        main = new Directory(src, "main", LocalDateTime.now(), "rwx");
-        aJava = new File(main, "A.java", 200, LocalDateTime.now(), "rw-");
-        bJava = new File(main, "B.java", 150, LocalDateTime.now(), "rw-");
+    @BeforeAll
+    public static void setup() {
+        TestFixture.setupFixture();
     }
 
     @Test
-    void AddingChildToDirectoryTest() {
-        assertEquals(2, main.getChildren().size(), "Main directory should contain two files initially.");
-        File newFile = new File(main, "C.java", 100, LocalDateTime.now(), "rw-");
-        main.addChild(newFile);
-        assertEquals(4, main.getChildren().size(), "Main directory should contain three files after adding one.");
+    public void SrcCountChildrenTest() {
+        assertEquals(2, TestFixture.src.countChildren());
     }
 
     @Test
-    void RemovingChildFromDirectoryTest() {
-        main.removeChild(aJava);
-        assertEquals(1, main.getChildren().size(), "Main directory should have one file after removal.");
-        assertFalse(main.getChildren().contains(aJava), "Main directory should not contain A.java after it is removed.");
+    public void MainCountChildrenTest() {
+        assertEquals(2, TestFixture.main.countChildren());
     }
 
     @Test
-    void GetFileSizeTest() {
-        int expectedSize = aJava.getSize() + bJava.getSize();
-        assertEquals(expectedSize, main.getSize(), "Size of the main directory should be the sum of its files' sizes.");
+    public void TestCountChildrenTest() {
+        assertEquals(3, TestFixture.test.countChildren());
+    }
+
+    @Test
+    public void RepoTotalSizeTest() {
+        assertEquals(440, TestFixture.repo.getTotalSize());
+    }
+
+    @Test
+    public void MainTotalSizeTest() {
+        assertEquals(200, TestFixture.main.getTotalSize());
+    }
+
+    @Test
+    public void TestTotalSizeTest() {
+        assertEquals(220, TestFixture.test.getTotalSize());
+    }
+
+    @Test
+    public void GetSrcSubDirectoriesTest() {
+        assertEquals(2, TestFixture.src.getSubDirectories().size());
+    }
+
+    @Test
+    public void GetMainSubDirectoriesTest() {
+        assertEquals(0, TestFixture.main.getSubDirectories().size());
+    }
+
+    @Test
+    public void GetRepoFilesTest() {
+        assertEquals(1, TestFixture.repo.getFiles().size());
+    }
+
+    @Test
+    public void GetMainFilesTest() {
+        assertEquals(2, TestFixture.main.getFiles().size());
+    }
+
+    @Test
+    public void GetTestFilesTest() {
+        assertEquals(2, TestFixture.test.getFiles().size());
+    }
+
+    @Test
+    public void MainContainsaJavaFileTest() {
+        assertTrue(TestFixture.main.contains(TestFixture.aJava));
+    }
+
+    @Test
+    public void TestContainsaTestJavaFileTest() {
+        assertTrue(TestFixture.test.contains(TestFixture.aTestJava));
+    }
+
+    @Test
+    public void RepoContainsaJavaFileTest() {
+        assertFalse(TestFixture.repo.contains(TestFixture.aJava));
     }
 }
