@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProjectManagementTest {
     private Project project1;
@@ -16,39 +19,40 @@ public class ProjectManagementTest {
 
     @BeforeEach
     void setUp() {
-        project1 = new Project("Ola Scooter");
-        project2 = new Project("Ola Bike");
+    project1 = new Project("Ola Scooter");
+    project2 = new Project("Ola Bike");
 
-        pm1 = new ProjectManager("Shashi Kiran");
-        pm2 = new ProjectManager("Kabir");
+    pm1 = new ProjectManager("Shashi Kiran");
+    pm2 = new ProjectManager("Kabir");
 
-        teamManager = new TeamManager("Shankar");
+    teamManager = new TeamManager("Shankar");
 
-        String[] memberNames = {"Sahithi", "Chandu", "Bhargav", "Siva Kumar", "Santoosh", "Pavan", "Bharthi", "Honnesh", "Aswini", "Raj"};
-        teamMembers = new ArrayList<>();
-        for (String name : memberNames) {
-            TeamMember member = new TeamMember(name);
-            teamMembers.add(member);
-        }
+    String[] memberNames = {"Sahithi", "Chandu", "Bhargav", "Siva Kumar", "Santoosh", "Pavan", "Bharthi", "Honnesh", "Aswini", "Raj"};
+    teamMembers = Arrays.stream(memberNames)
+                        .map(TeamMember::new)
+                        .collect(Collectors.toList());
 
-        String[] scooterTasks = {"Adding lock and unlock to app", "Proximity lock/unlock", "Adding multiple profiles", "Passcode API"};
-        for (int i = 0; i < scooterTasks.length; i++) {
-            Task task = new Task(scooterTasks[i]);
-            project1.addTask(task);
-            pm1.attachToObservable(task); 
-            teamMembers.get(i).attachToObservable(task);  
-            attachHelpers(task, i);
-        }
+    String[] scooterTasks = {"Adding lock and unlock to app", "Proximity lock/unlock", "Adding multiple profiles", "Passcode API"};
+    IntStream.range(0, scooterTasks.length)
+             .forEach(i -> {
+                 Task task = new Task(scooterTasks[i]);
+                 project1.addTask(task);
+                 pm1.attachToObservable(task);
+                 teamMembers.get(i).attachToObservable(task);
+                 attachHelpers(task, i);
+             });
 
-        String[] bikeTasks = {"Limiting speed based mode", "Party mode implementation", "Enabling all Capp features to Capp-Bike"};
-        for (int i = 0; i < bikeTasks.length; i++) {
-            Task task = new Task(bikeTasks[i]);
-            project2.addTask(task);
-            pm2.attachToObservable(task); 
-            teamMembers.get(i + 4).attachToObservable(task); 
-            attachHelpers(task, i + 4);
-        }
-    }
+    String[] bikeTasks = {"Limiting speed based mode", "Party mode implementation", "Enabling all Capp features to Capp-Bike"};
+    IntStream.range(0, bikeTasks.length)
+             .forEach(i -> {
+                 Task task = new Task(bikeTasks[i]);
+                 project2.addTask(task);
+                 pm2.attachToObservable(task);
+                 teamMembers.get(i + 4).attachToObservable(task);
+                 attachHelpers(task, i + 4);
+             });
+}
+
 
     private void attachHelpers(Task task, int assignedMemberIndex) {
         int helpersNeeded = 3;
