@@ -1,5 +1,4 @@
 package umbcs680.comparator;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -73,15 +72,12 @@ public class Car {
     }
 
     public static void setParetoDominationCounts(List<Car> cars) {
-        for (Car car : cars) {
-            int dominationCount = 0;
-            for (Car other : cars) {
-                if (dominates(other, car)) {
-                    dominationCount++;
-                }
-            }
-            car.setDominationCount(dominationCount);
-        }
+        cars.forEach(car -> {
+            long count = cars.stream()
+                             .filter(other -> dominates(other, car))
+                             .count();
+            car.setDominationCount((int) count);
+        });
     }
 
     public static Comparator<Car> paretoComparator() {

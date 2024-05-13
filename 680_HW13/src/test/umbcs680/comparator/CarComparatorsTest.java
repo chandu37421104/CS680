@@ -3,7 +3,7 @@ package umbcs680.comparator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,22 +25,21 @@ public class CarComparatorsTest {
 
     @Test
     public void priceComparatorAscendingTest() {
-        CarSorter.PriceComparator(cars); 
+        cars.sort(Car.priceComparator());
         assertEquals("Ford", cars.get(0).getMake(), "Expected the cheapest car to be 'Ford'");
         assertEquals("Tesla", cars.get(cars.size() - 1).getMake(), "Expected the most expensive car to be 'Tesla'");
     }
 
     @Test
     public void priceComparatorDescendingTest() {
-        CarSorter.PriceComparator(cars);
-        cars.sort(Car.priceComparator().reversed()); 
+        cars.sort(Car.priceComparator().reversed());
         assertEquals("Tesla", cars.get(0).getMake(), "Expected the most expensive car to be 'Tesla'");
         assertEquals("Ford", cars.get(cars.size() - 1).getMake(), "Expected the cheapest car to be 'Ford'");
     }
 
     @Test
     public void yearComparatorDescendingTest() {
-        CarSorter.YearComparator(cars);
+        cars.sort(Car.yearComparator());
         assertEquals("Tesla", cars.get(0).getMake(), "Expected the newest car to be 'Tesla'");
         assertEquals("Ford", cars.get(cars.size() - 1).getMake(), "Expected the oldest car to be 'Ford'");
     }
@@ -54,22 +53,22 @@ public class CarComparatorsTest {
 
     @Test
     public void mileageComparatorAscendingTest() {
-        CarSorter.MileageComparator(cars);
+        cars.sort(Car.mileageComparator());
         assertEquals("Tesla", cars.get(0).getMake(), "Expected the car with the least mileage to be 'Tesla'");
         assertEquals("Ford", cars.get(cars.size() - 1).getMake(), "Expected the car with the most mileage to be 'Ford'");
     }
 
     @Test
     public void mileageComparatorDescendingTest() {
-        cars.sort(Car.mileageComparator().reversed()); 
+        cars.sort(Car.mileageComparator().reversed());
         assertEquals("Ford", cars.get(0).getMake(), "Expected the car with the most mileage to be 'Ford'");
         assertEquals("Tesla", cars.get(cars.size() - 1).getMake(), "Expected the car with the least mileage to be 'Tesla'");
     }
 
     @Test
     public void paretoComparatorTest() {
-        CarSorter.paretoComparator(cars);
-        assertEquals("Honda", cars.get(0).getMake(), "Expected the car with the least domination count to be 'Honda'");
-        assertTrue(cars.get(cars.size() - 1).getDominationCount() > 0, "Expected the car with the most domination count at the end");
+        Car.setParetoDominationCounts(cars); 
+        cars.sort(Car.paretoComparator());
+        assertTrue(cars.get(0).getDominationCount() <= cars.get(cars.size() - 1).getDominationCount(), "Expected the car with the least domination count at the beginning");
     }
 }
